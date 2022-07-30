@@ -1,8 +1,10 @@
+<p>
+  <a title="Pub" href="https://pub.dev/packages/json_events" ><img src="https://img.shields.io/pub/v/json_events.svg?style=popout" /></a>
+</p>
+
 # json_events
 A package for parsing large json files/objects. The package processes the json in a forward-only way and emits events based on the tokens it encounters.
 > ⚠️ **Currently there is no support for encoding**
-
-
 
 # Usage
 ```dart
