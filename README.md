@@ -14,7 +14,6 @@ Stream<JsonEvent> s = file
     .flatten();
 
 await for (JsonEvent je in s) {
-// ignore: avoid_print
 print("Event Type: ${je.type.name} Value: ${je.value}");
 }
 ```
