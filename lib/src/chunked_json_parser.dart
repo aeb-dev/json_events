@@ -251,6 +251,7 @@ abstract class _ChunkedJsonParser<T> {
         _NumberBuffer buffer = this.buffer as _NumberBuffer;
         this.buffer = null;
         finishChunkNumber(numState, 0, 0, buffer);
+        listener.propertyValue();
       } else if (partialType == PARTIAL_STRING) {
         fail(chunkEnd, "Unterminated string");
       } else {
@@ -260,6 +261,9 @@ abstract class _ChunkedJsonParser<T> {
     }
     if (state != STATE_END) {
       fail(chunkEnd);
+    }
+    if (listener.value != null || chunk == "null") {
+      listener.propertyValue();
     }
   }
 
