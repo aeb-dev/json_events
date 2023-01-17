@@ -262,7 +262,7 @@ abstract class _ChunkedJsonParser<T> {
     if (state != STATE_END) {
       fail(chunkEnd);
     }
-    if (listener.value != null || chunk == "null") {
+    if (listener.hasValue) {
       listener.propertyValue();
     }
   }
