@@ -1,0 +1,24 @@
+[
+    {
+        "type": 1
+    },
+    {
+        "type": 5,
+        "value": "a"
+    },
+    {
+        "type": 6,
+        "value": "b"
+    },
+    {
+        "type": 5,
+        "value": "a"
+    },
+    {
+        "type": 6,
+        "value": "b"
+    },
+    {
+        "type": 3
+    }
+]

@@ -1,0 +1,24 @@
+[
+    {
+        "type": 1
+    },
+    {
+        "type": 5,
+        "value": "min"
+    },
+    {
+        "type": 6,
+        "value": -1.0e+28
+    },
+    {
+        "type": 5,
+        "value": "max"
+    },
+    {
+        "type": 6,
+        "value": 1.0e+28
+    },
+    {
+        "type": 3
+    }
+]

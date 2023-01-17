@@ -17,24 +17,30 @@ class _JsonListener {
   /// The most recently read value. */
   Object? value;
 
+  bool hasValue = false;
+
   /// The most recently read value. */
   final List<JsonEvent> _chunkedEvents = [];
 
   void handleString(String value) {
     this.value = value;
+    this.hasValue = true;
   }
 
   void handleNumber(num value) {
     this.value = value;
+    this.hasValue = true;
   }
 
   // ignore: avoid_positional_boolean_parameters
   void handleBool(bool value) {
     this.value = value;
+    this.hasValue = true;
   }
 
   void handleNull() {
     value = null;
+    this.hasValue = true;
   }
 
   void beginObject() {
@@ -52,6 +58,7 @@ class _JsonListener {
     );
 
     value = null;
+    this.hasValue = false;
   }
 
   void propertyValue() {
@@ -63,6 +70,7 @@ class _JsonListener {
     );
 
     value = null;
+    this.hasValue = false;
   }
 
   void endObject() {
@@ -86,6 +94,7 @@ class _JsonListener {
     );
 
     value = null;
+    this.hasValue = false;
   }
 
   void endArray() {
