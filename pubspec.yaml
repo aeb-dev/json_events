@@ -8,10 +8,12 @@ issue_tracker: https://github.com/aeb-dev/json_events/issues
 environment:
   sdk: '>=2.18.0 <3.0.0'
 
+dependencies:
+  meta: ^1.8.0
+
 dev_dependencies:
   test: ^1.16.0
   aeb_lint: ^1.0.0
-  meta: ^1.8.0
   async: ^2.10.0
   collection: ^1.17.0
   path: ^1.8.0
