@@ -1,0 +1,16 @@
+[
+    {
+        "type": 1
+    },
+    {
+        "type": 5,
+        "value": "foo\u0000bar"
+    },
+    {
+        "type": 6,
+        "value": 42
+    },
+    {
+        "type": 3
+    }
+]

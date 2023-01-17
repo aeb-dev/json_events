@@ -1,0 +1,24 @@
+[
+    {
+        "type": 1
+    },
+    {
+        "type": 5,
+        "value": "asd"
+    },
+    {
+        "type": 6,
+        "value": "sdf"
+    },
+    {
+        "type": 5,
+        "value": "dfg"
+    },
+    {
+        "type": 6,
+        "value": "fgh"
+    },
+    {
+        "type": 3
+    }
+]
