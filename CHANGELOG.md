@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Custom object parsing
+
 ## 1.0.0
 
 - Parser mixins
