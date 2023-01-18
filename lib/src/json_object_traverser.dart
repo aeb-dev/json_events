@@ -12,7 +12,7 @@ mixin JsonObjectTraverser implements json_traverser.JsonTraverser {
 
   @internal
   @override
-  Future<void> loadJson(StreamIterator<JsonEvent> si) async {
+  FutureOr<void> loadJson(StreamIterator<JsonEvent> si) async {
     await json_traverser.readObjectJson(
       si: si,
       creator: () => this,
@@ -22,12 +22,12 @@ mixin JsonObjectTraverser implements json_traverser.JsonTraverser {
   /// This function is called every time a new key is
   /// encountered. How the json is parsed should be
   /// implemented inside this function
-  Future<void> readJson(String key);
+  FutureOr<void> readJson(String key);
 
   /// Reads the current value from the iterator
   @protected
   @nonVirtual
-  Future<T> readPropertyJsonContinue<T>({
+  FutureOr<T> readPropertyJsonContinue<T>({
     T? defaultValue,
   }) =>
       json_traverser.readPropertyJsonContinue(
@@ -38,7 +38,7 @@ mixin JsonObjectTraverser implements json_traverser.JsonTraverser {
   /// Reads the current value as object from the iterator
   @protected
   @nonVirtual
-  Future<T> readObjectJsonContinue<T extends JsonObjectTraverser>({
+  FutureOr<T> readObjectJsonContinue<T extends JsonObjectTraverser>({
     required FutureOr<T> Function() creator,
   }) =>
       json_traverser.readObjectJsonContinue(
@@ -73,5 +73,5 @@ mixin JsonObjectTraverser implements json_traverser.JsonTraverser {
       );
 
   @override
-  Future<void> postProcessJson() async {}
+  FutureOr<void> postProcessJson() async {}
 }

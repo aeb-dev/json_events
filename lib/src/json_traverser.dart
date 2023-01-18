@@ -13,13 +13,13 @@ mixin JsonTraverser {
   /// Starts the loading of the json value to the correspoding
   /// json value from the iterator
   @internal
-  Future<void> loadJson(StreamIterator<JsonEvent> si);
+  FutureOr<void> loadJson(StreamIterator<JsonEvent> si);
 
   /// This function can be used to add logic after the json value is parsed
   /// This is called after [loadJson] is finished. It is safe to leave it
   /// as empty function body
   @protected
-  Future<void> postProcessJson();
+  FutureOr<void> postProcessJson();
 }
 
 /// It is almost same with the [readPropertyJsonContinue].
@@ -32,7 +32,10 @@ Future<T> readPropertyJson<T>({
 }) async {
   await si.moveNext();
 
-  T t = await readPropertyJsonContinue(si: si);
+  T t = await readPropertyJsonContinue(
+    si: si,
+    defaultValue: defaultValue,
+  );
   return t;
 }
 
@@ -68,10 +71,32 @@ Future<T> readPropertyJsonContinue<T>({
   return value as T;
 }
 
-/// Reads the current value as an object from the iterator
+/// It is almost same with the [readCustomObjectJsonContinue].
+/// The difference is that this function assumes the iterator
+/// has not moved yet. So it calls [StreamIterator.moveNext]
+/// then calls [readCustomObjectJsonContinue]
+/// You can use this function for parsing objects that
+/// you do not know the type before parsing. For example,
+/// polymorphism based on field or $type fields
 Future<void> readCustomObjectJson({
   required StreamIterator<JsonEvent> si,
-  required Future<void> Function(String key) readJson,
+  required FutureOr<void> Function(String key) readJson,
+  FutureOr<void> Function()? postProcessJson,
+}) async {
+  await si.moveNext();
+
+  await readCustomObjectJsonContinue(
+    si: si,
+    readJson: readJson,
+    postProcessJson: postProcessJson,
+  );
+}
+
+/// Reads the current value as an object from the iterator
+Future<void> readCustomObjectJsonContinue({
+  required StreamIterator<JsonEvent> si,
+  required FutureOr<void> Function(String key) readJson,
+  FutureOr<void> Function()? postProcessJson,
 }) async {
   assert(si.current.type == JsonEventType.beginObject);
 
@@ -108,6 +133,8 @@ Future<void> readCustomObjectJson({
       continue;
     }
   }
+
+  await postProcessJson?.call();
 }
 
 /// It is almost same with the [readObjectJsonContinue].
@@ -138,41 +165,11 @@ Future<T> readObjectJsonContinue<T extends JsonObjectTraverser>({
   T t = await creator();
   t.sij = si;
 
-  late String key;
-  while (await si.moveNext()) {
-    if (si.current.type == JsonEventType.endObject) {
-      break;
-    }
-
-    if (si.current.type == JsonEventType.propertyName) {
-      key = si.current.value as String;
-
-      continue;
-    }
-
-    if (si.current.type == JsonEventType.propertyValue &&
-        si.current.value != null) {
-      await t.readJson(key);
-
-      continue;
-    }
-
-    if (si.current.type == JsonEventType.beginObject ||
-        si.current.type == JsonEventType.beginArray) {
-      JsonEvent oldEvent = si.current;
-      await t.readJson(key);
-
-      if (oldEvent == si.current) {
-        await _readUnknown(
-          si: si,
-        );
-      }
-
-      continue;
-    }
-  }
-
-  await t.postProcessJson();
+  await readCustomObjectJsonContinue(
+    si: si,
+    readJson: t.readJson,
+    postProcessJson: t.postProcessJson,
+  );
 
   return t;
 }

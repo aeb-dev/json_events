@@ -19,7 +19,7 @@ mixin JsonNestedArrayTraverser<T extends List<dynamic>, E> on List<T>
 
   @internal
   @override
-  Future<void> loadJson(StreamIterator<JsonEvent> si) async {
+  FutureOr<void> loadJson(StreamIterator<JsonEvent> si) async {
     await for (T t in json_traverser.readNestedArrayJson<T, E>(
       si: si,
       creator: creator,
@@ -30,5 +30,5 @@ mixin JsonNestedArrayTraverser<T extends List<dynamic>, E> on List<T>
 
   @protected
   @override
-  Future<void> postProcessJson() async {}
+  FutureOr<void> postProcessJson() async {}
 }
