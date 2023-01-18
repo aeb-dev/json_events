@@ -18,7 +18,7 @@ mixin JsonArrayTraverser<T> on List<T> implements json_traverser.JsonTraverser {
 
   @internal
   @override
-  Future<void> loadJson(StreamIterator<JsonEvent> si) async {
+  FutureOr<void> loadJson(StreamIterator<JsonEvent> si) async {
     await for (T t in json_traverser.readArrayJson(
       si: si,
       creator: creator,
@@ -29,5 +29,5 @@ mixin JsonArrayTraverser<T> on List<T> implements json_traverser.JsonTraverser {
 
   @protected
   @override
-  Future<void> postProcessJson() async {}
+  FutureOr<void> postProcessJson() async {}
 }
