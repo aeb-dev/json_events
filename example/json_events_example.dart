@@ -33,8 +33,9 @@ Future<void> main() async {
   }
   """;
 
-  Stream<JsonEvent> s =
-      Stream.value(jsonString).transform(const JsonEventDecoder()).flatten();
+  Stream<JsonEvent> s = Stream<String>.value(jsonString)
+      .transform(const JsonEventDecoder())
+      .flatten();
 
   await for (JsonEvent je in s) {
     // ignore: avoid_print

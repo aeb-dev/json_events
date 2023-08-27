@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_asserts_with_message
+
 import "dart:async";
 
 import "package:meta/meta.dart";
@@ -211,10 +213,11 @@ Stream<T> readArrayJsonContinue<T>({
 
       T t;
       if (callLoader) {
-        var _creator = creator as FutureOr<JsonObjectTraverser> Function();
+        FutureOr<JsonObjectTraverser> Function() creator_ =
+            creator! as FutureOr<JsonObjectTraverser> Function();
         t = await readObjectJsonContinue<JsonObjectTraverser>(
           si: si,
-          creator: _creator,
+          creator: creator_,
         ) as T;
       } else {
         t = await creator!();

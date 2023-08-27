@@ -1,11 +1,11 @@
-// ignore_for_file: constant_identifier_names, unused_field
+// ignore_for_file: constant_identifier_names, unused_field, parameter_assignments, cascade_invocations, prefer_asserts_with_message, comment_references
 
 part of "json_event_decoder.dart";
 
 // Powers of 10 up to 10^22 are representable as doubles.
 // Powers of 10 above that are only approximate due to lack of precission.
 // Used by double-parsing.
-const _POWERS_OF_TEN = [
+const List<double> _POWERS_OF_TEN = <double>[
   1.0, // 0
   10.0,
   100.0,
@@ -530,8 +530,12 @@ abstract class _ChunkedJsonParser<T> {
     int keywordType = partialState & KWD_TYPE_MASK;
     int count = partialState >> KWD_COUNT_SHIFT;
     int keywordTypeIndex = keywordType >> KWD_TYPE_SHIFT;
-    String keyword =
-        const ["null", "true", "false", "\xEF\xBB\xBF"][keywordTypeIndex];
+    String keyword = const <String>[
+      "null",
+      "true",
+      "false",
+      "\xEF\xBB\xBF",
+    ][keywordTypeIndex];
     assert(count < keyword.length);
     do {
       if (position == chunkEnd) {
@@ -593,14 +597,12 @@ abstract class _ChunkedJsonParser<T> {
         case NEWLINE:
         case TAB:
           position++;
-          break;
         case QUOTE:
           if ((state & ALLOW_STRING_MASK) != 0) {
             fail(position);
           }
           state |= VALUE_READ_BITS;
           position = parseString(position + 1);
-          break;
         case LBRACKET:
           if ((state & ALLOW_VALUE_MASK) != 0) {
             fail(position);
@@ -609,7 +611,6 @@ abstract class _ChunkedJsonParser<T> {
           saveState(state);
           state = STATE_ARRAY_EMPTY;
           position++;
-          break;
         case LBRACE:
           if ((state & ALLOW_VALUE_MASK) != 0) {
             fail(position);
@@ -618,28 +619,24 @@ abstract class _ChunkedJsonParser<T> {
           saveState(state);
           state = STATE_OBJECT_EMPTY;
           position++;
-          break;
         case CHAR_n:
           if ((state & ALLOW_VALUE_MASK) != 0) {
             fail(position);
           }
           state |= VALUE_READ_BITS;
           position = parseNull(position);
-          break;
         case CHAR_f:
           if ((state & ALLOW_VALUE_MASK) != 0) {
             fail(position);
           }
           state |= VALUE_READ_BITS;
           position = parseFalse(position);
-          break;
         case CHAR_t:
           if ((state & ALLOW_VALUE_MASK) != 0) {
             fail(position);
           }
           state |= VALUE_READ_BITS;
           position = parseTrue(position);
-          break;
         case COLON:
           if (state != STATE_OBJECT_KEY) {
             fail(position);
@@ -647,7 +644,6 @@ abstract class _ChunkedJsonParser<T> {
           listener.propertyName();
           state = STATE_OBJECT_COLON;
           position++;
-          break;
         case COMMA:
           if (state == STATE_OBJECT_VALUE) {
             listener.propertyValue();
@@ -660,7 +656,6 @@ abstract class _ChunkedJsonParser<T> {
           } else {
             fail(position);
           }
-          break;
         case RBRACKET:
           if (state == STATE_ARRAY_EMPTY) {
             listener.endArray();
@@ -672,7 +667,6 @@ abstract class _ChunkedJsonParser<T> {
           }
           state = restoreState() | VALUE_READ_BITS;
           position++;
-          break;
         case RBRACE:
           if (state == STATE_OBJECT_EMPTY) {
             listener.endObject();
@@ -684,14 +678,12 @@ abstract class _ChunkedJsonParser<T> {
           }
           state = restoreState() | VALUE_READ_BITS;
           position++;
-          break;
         default:
           if ((state & ALLOW_VALUE_MASK) != 0) {
             fail(position);
           }
           state |= VALUE_READ_BITS;
           position = parseNumber(char, position);
-          break;
       }
     }
     this.state = state;
@@ -894,19 +886,14 @@ abstract class _ChunkedJsonParser<T> {
     switch (char) {
       case CHAR_b:
         char = BACKSPACE;
-        break;
       case CHAR_f:
         char = FORM_FEED;
-        break;
       case CHAR_n:
         char = NEWLINE;
-        break;
       case CHAR_r:
         char = CARRIAGE_RETURN;
-        break;
       case CHAR_t:
         char = TAB;
-        break;
       case SLASH:
       case BACKSLASH:
       case QUOTE:
@@ -932,7 +919,6 @@ abstract class _ChunkedJsonParser<T> {
           }
         }
         char = value;
-        break;
       default:
         if (char < SPACE) {
           fail(position, "Control character in string");
@@ -951,7 +937,7 @@ abstract class _ChunkedJsonParser<T> {
   int beginChunkNumber(int state, int start) {
     int end = chunkEnd;
     int length = end - start;
-    var buffer = _NumberBuffer(length);
+    _NumberBuffer buffer = _NumberBuffer(length);
     copyCharsToList(start, end, buffer.list, 0);
     buffer.length = length;
     this.buffer = buffer;
@@ -1052,6 +1038,7 @@ abstract class _ChunkedJsonParser<T> {
           if (sign < 0) {
             highDigit &= digit;
           }
+          // ignore: avoid_js_rounded_ints
           if (digitCount == 19 || intValue - highDigit < -922337203685477580) {
             isDouble = true;
             // Big value that we know is not trusted to be exact later,

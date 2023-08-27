@@ -1,5 +1,3 @@
-library json_events;
-
 export "src/extensions/json_traverser.dart";
 export "src/extensions/stream.dart";
 export "src/json_array_traverser.dart";

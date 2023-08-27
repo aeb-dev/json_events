@@ -25,7 +25,12 @@ Future<void> main() async {
 
   Directory d1 = Directory.fromUri(Uri(path: "./test/cases/default"));
   Directory d2 = Directory.fromUri(Uri(path: "./test/cases/custom"));
-  Stream<FileSystemEntity> files = StreamGroup.merge([d1.list(), d2.list()]);
+  Stream<FileSystemEntity> files = StreamGroup.merge(
+    <Stream<FileSystemEntity>>[
+      d1.list(),
+      d2.list(),
+    ],
+  );
 
   await for (FileSystemEntity fse in files) {
     String fileName = path.basename(fse.path);
@@ -63,13 +68,17 @@ Future<void> main() async {
         List<JsonEvent> expectedEvents = await readArrayJson(
           si: si,
           creator: _JsonEvent.new,
-        ).map((event) => event.toJsonEvent()).toList();
+        ).map((_JsonEvent event) => event.toJsonEvent()).toList();
 
         List<JsonEvent> actualEvents = await actualEventStream.toList();
 
         bool hasSameLength = expectedEvents.length == actualEvents.length;
-        bool isEqual = IterableZip([expectedEvents, actualEvents])
-            .every((x) => x.first.equals(x.last));
+        bool isEqual = IterableZip<JsonEvent>(
+          <List<JsonEvent>>[
+            expectedEvents,
+            actualEvents,
+          ],
+        ).every((List<JsonEvent> x) => x.first.equals(x.last));
 
         expect(isEqual && hasSameLength, isTrue);
       });
@@ -117,8 +126,8 @@ Future<void> main() async {
     expect(to.primArr[1], equals(1));
     expect(to.primArr[2], equals(2));
     expect(to.nPrimArr.length, equals(2));
-    expect(to.nPrimArr[0], equals([0, 1, 2]));
-    expect(to.nPrimArr[1], equals([3, 4, 5]));
+    expect(to.nPrimArr[0], equals(<int>[0, 1, 2]));
+    expect(to.nPrimArr[1], equals(<int>[3, 4, 5]));
   });
 
   test("array traverser object", () async {
@@ -184,8 +193,8 @@ Future<void> main() async {
     expect(toa[0].primArr[1], equals(1));
     expect(toa[0].primArr[2], equals(2));
     expect(toa[0].nPrimArr.length, equals(2));
-    expect(toa[0].nPrimArr[0], equals([0, 1, 2]));
-    expect(toa[0].nPrimArr[1], equals([3, 4, 5]));
+    expect(toa[0].nPrimArr[0], equals(<int>[0, 1, 2]));
+    expect(toa[0].nPrimArr[1], equals(<int>[3, 4, 5]));
 
     expect(toa[1].x, equals(2));
     expect(toa[1].y, equals(3));
@@ -200,8 +209,8 @@ Future<void> main() async {
     expect(toa[1].primArr[1], equals(1));
     expect(toa[1].primArr[2], equals(2));
     expect(toa[1].nPrimArr.length, equals(2));
-    expect(toa[1].nPrimArr[0], equals([0, 1, 2]));
-    expect(toa[1].nPrimArr[1], equals([3, 4, 5]));
+    expect(toa[1].nPrimArr[0], equals(<int>[0, 1, 2]));
+    expect(toa[1].nPrimArr[1], equals(<int>[3, 4, 5]));
   });
 
   test("array traverser primitive", () async {
@@ -279,8 +288,8 @@ Future<void> main() async {
     expect(toa[0][0].primArr[1], equals(1));
     expect(toa[0][0].primArr[2], equals(2));
     expect(toa[0][0].nPrimArr.length, equals(2));
-    expect(toa[0][0].nPrimArr[0], equals([0, 1, 2]));
-    expect(toa[0][0].nPrimArr[1], equals([3, 4, 5]));
+    expect(toa[0][0].nPrimArr[0], equals(<int>[0, 1, 2]));
+    expect(toa[0][0].nPrimArr[1], equals(<int>[3, 4, 5]));
 
     expect(toa[1][0].x, equals(2));
     expect(toa[1][0].y, equals(3));
@@ -295,8 +304,8 @@ Future<void> main() async {
     expect(toa[1][0].primArr[1], equals(1));
     expect(toa[1][0].primArr[2], equals(2));
     expect(toa[1][0].nPrimArr.length, equals(2));
-    expect(toa[1][0].nPrimArr[0], equals([0, 1, 2]));
-    expect(toa[1][0].nPrimArr[1], equals([3, 4, 5]));
+    expect(toa[1][0].nPrimArr[0], equals(<int>[0, 1, 2]));
+    expect(toa[1][0].nPrimArr[1], equals(<int>[3, 4, 5]));
   });
 
   test("nestedarray traverser primitive", () async {
@@ -306,8 +315,8 @@ Future<void> main() async {
     TestNestedPrimitiveArray toa = TestNestedPrimitiveArray();
 
     await expectLater(toa.loadJsonFromString(jsonString), completes);
-    expect(toa[0], equals([1, 2, 3]));
-    expect(toa[1], equals([2, 3, 4]));
+    expect(toa[0], equals(<int>[1, 2, 3]));
+    expect(toa[1], equals(<int>[2, 3, 4]));
   });
 }
 
@@ -316,60 +325,55 @@ class TestObject with JsonObjectTraverser {
   int? y;
   int? z;
   TestObject? obj;
-  List<int> primArr = [];
-  List<List<int>> nPrimArr = [];
+  List<int> primArr = <int>[];
+  List<List<int>> nPrimArr = <List<int>>[];
 
   @override
   Future<void> readJson(String key) async {
     switch (key) {
       case "x":
         x = await this.readPropertyJsonContinue<int?>();
-        break;
       case "y":
         y = await this.readPropertyJsonContinue<int?>();
-        break;
       case "z":
         z = await this.readPropertyJsonContinue<int?>();
-        break;
       case "obj":
         obj = await this.readObjectJsonContinue(creator: TestObject.new);
-        break;
       case "primArr":
         await for (int i in this.readArrayJsonContinue()) {
           primArr.add(i);
         }
-        break;
       case "nPrimArr":
         await for (List<int> li
             in this.readNestedArrayJsonContinue<List<int>, int>()) {
           nPrimArr.add(li);
         }
-        break;
     }
   }
 }
 
-class TestPrimitiveArray extends DelegatingList<int> with JsonArrayTraverser {
-  TestPrimitiveArray() : super([]);
+class TestPrimitiveArray extends DelegatingList<int>
+    with JsonArrayTraverser<int> {
+  TestPrimitiveArray() : super(<int>[]);
 }
 
 class TestObjectArray extends DelegatingList<TestObject>
-    with JsonArrayTraverser {
-  TestObjectArray() : super([]) {
+    with JsonArrayTraverser<TestObject> {
+  TestObjectArray() : super(<TestObject>[]) {
     creator = TestObject.new;
   }
 }
 
 class TestNestedObjectArray extends DelegatingList<List<TestObject>>
     with JsonNestedArrayTraverser<List<TestObject>, TestObject> {
-  TestNestedObjectArray() : super([]) {
+  TestNestedObjectArray() : super(<List<TestObject>>[]) {
     creator = TestObject.new;
   }
 }
 
 class TestNestedPrimitiveArray extends DelegatingList<List<int>>
     with JsonNestedArrayTraverser<List<int>, int> {
-  TestNestedPrimitiveArray() : super([]);
+  TestNestedPrimitiveArray() : super(<List<int>>[]);
 }
 
 class _JsonEvent with JsonObjectTraverser {
@@ -383,10 +387,8 @@ class _JsonEvent with JsonObjectTraverser {
       case "type":
         int typeAsInt = await this.readPropertyJsonContinue<int>();
         type = JsonEventType.values[typeAsInt];
-        break;
       case "value":
         value = await this.readPropertyJsonContinue<dynamic>();
-        break;
     }
   }
 

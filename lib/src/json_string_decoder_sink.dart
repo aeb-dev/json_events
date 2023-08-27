@@ -15,9 +15,10 @@ class _JsonStringDecoderSink extends StringConversionSinkBase {
 
   @override
   void addSlice(String chunk, int start, int end, bool isLast) {
-    _parser.chunk = chunk;
-    _parser.chunkEnd = end;
-    _parser.parse(start);
+    _parser
+      ..chunk = chunk
+      ..chunkEnd = end
+      ..parse(start);
     _sink.add(_parser.result);
     _parser.result.clear();
     if (isLast) {
@@ -28,9 +29,10 @@ class _JsonStringDecoderSink extends StringConversionSinkBase {
   @override
   void close() {
     _parser.close();
-    var decoded = _parser.result;
-    _sink.add(decoded);
-    _sink.close();
+    List<JsonEvent> decoded = _parser.result;
+    _sink
+      ..add(decoded)
+      ..close();
   }
 
   // ByteConversionSink asUtf8Sink(bool allowMalformed) {

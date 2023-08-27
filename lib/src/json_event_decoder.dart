@@ -32,11 +32,11 @@ class JsonEventDecoder extends Converter<String, List<JsonEvent>> {
   @override
   List<JsonEvent> convert(String input) {
     _JsonListener listener = _JsonListener();
-    var parser = _JsonStringParser(listener);
-    parser.chunk = input;
-    parser.chunkEnd = input.length;
-    parser.parse(0);
-    parser.close();
+    _JsonStringParser(listener)
+      ..chunk = input
+      ..chunkEnd = input.length
+      ..parse(0)
+      ..close();
     return listener.result;
   }
 

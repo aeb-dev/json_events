@@ -10,7 +10,7 @@ extension JsonTraverserExtensions on JsonTraverser {
   /// Starts the loading of the json value to the correspoding
   /// json value from the [s]
   Future<void> loadJsonFromStream(Stream<JsonEvent> s) async {
-    StreamIterator<JsonEvent> si = StreamIterator(s);
+    StreamIterator<JsonEvent> si = StreamIterator<JsonEvent>(s);
     await loadJson(si);
   }
 
@@ -25,7 +25,7 @@ extension JsonTraverserExtensions on JsonTraverser {
   /// Starts the loading of the json value to the correspoding
   /// json value from the [json]
   Future<void> loadJsonFromString(String json) async {
-    Stream<String> s = Stream.value(json);
+    Stream<String> s = Stream<String>.value(json);
     await loadJsonFromStringStream(s);
   }
 }

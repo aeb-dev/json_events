@@ -1,19 +1,19 @@
 name: json_events
 description: A package for parsing large json files/objects. The package processes the json in a forward-only way and emits events based on the tokens it encounters.
-version: 1.0.1
+version: 1.1.0
 homepage: https://github.com/aeb-dev/json_events
 repository: https://github.com/aeb-dev/json_events
 issue_tracker: https://github.com/aeb-dev/json_events/issues
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  meta: ^1.8.0
+  meta: ^1.9.1
 
 dev_dependencies:
-  test: ^1.16.0
-  aeb_lint: ^1.0.0
-  async: ^2.10.0
-  collection: ^1.17.0
-  path: ^1.8.0
+  aeb_lint: ^1.1.0
+  async: ^2.11.0
+  collection: ^1.18.0
+  path: ^1.8.3
+  test: ^1.24.6

@@ -7,7 +7,7 @@ class _JsonStringParser extends _ChunkedJsonParser<String> {
   @override
   int chunkEnd = 0;
 
-  _JsonStringParser(_JsonListener listener) : super(listener);
+  _JsonStringParser(super.listener);
 
   @override
   int getChar(int position) => chunk.codeUnitAt(position);
@@ -21,16 +21,12 @@ class _JsonStringParser extends _ChunkedJsonParser<String> {
   }
 
   @override
-  void addSliceToString(int start, int end) {
-    StringBuffer buffer = this.buffer as StringBuffer;
-    buffer.write(chunk.substring(start, end));
-  }
+  void addSliceToString(int start, int end) =>
+      this.buffer as StringBuffer..write(chunk.substring(start, end));
 
   @override
-  void addCharToString(int charCode) {
-    StringBuffer buffer = this.buffer as StringBuffer;
-    buffer.writeCharCode(charCode);
-  }
+  void addCharToString(int charCode) =>
+      this.buffer as StringBuffer..writeCharCode(charCode);
 
   @override
   String endString() {

@@ -10,9 +10,8 @@ class _JsonListener {
   /// Stack used to handle nested containers.
   ///
   /// The current container is pushed on the stack when a new one is
-  /// started. If the container is a [Map], there is also a current [key]
-  /// which is also stored on the stack.
-  final List<Object?> stack = [];
+  /// started.
+  final List<Object?> stack = <Object?>[];
 
   /// The most recently read value. */
   Object? value;
@@ -20,7 +19,7 @@ class _JsonListener {
   bool hasValue = false;
 
   /// The most recently read value. */
-  final List<JsonEvent> _chunkedEvents = [];
+  final List<JsonEvent> _chunkedEvents = <JsonEvent>[];
 
   void handleString(String value) {
     this.value = value;

@@ -1,3 +1,5 @@
+// ignore_for_file: parameter_assignments
+
 part of "json_event_decoder.dart";
 
 /// Buffer holding parts of a numeral.
@@ -28,8 +30,7 @@ class _NumberBuffer {
     if (minCapacity < _NumberBuffer.minCapacity) {
       return _NumberBuffer.minCapacity;
     }
-    minCapacity = (minCapacity + 3) & ~3; // Round to multiple of four.
-    return minCapacity;
+    return (minCapacity + 3) & ~3; // Round to multiple of four.
   }
 
   // Grows to the exact size asked for.
@@ -38,8 +39,8 @@ class _NumberBuffer {
     if (newCapacity <= list.length) {
       return;
     }
-    Uint8List newList = Uint8List(newCapacity);
-    newList.setRange(0, list.length, list, 0);
+    Uint8List newList = Uint8List(newCapacity)
+      ..setRange(0, list.length, list, 0);
     this.list = newList;
   }
 
