@@ -47,19 +47,14 @@ class MyClass with JsonObjectTraverser {
     switch (key) {
       case "x":
         x = await this.readPropertyJsonContinue<int>();
-        break;
-      case "text":
-        y = await this.readPropertyJsonContinue<String?>();
-        break;
       case "arr":
-        arr = await this.readPropertyJsonContinue<MyClass>(creator: MyClass.new);
-        break;
+        arr = await this.readArrayJsonContinue<MyClass>(creator: MyClass.new).toList();
       case "pArr":
         pArr = await this.readArrayJsonContinue<int>().toList();
-        break;
       case "pNestedArray":
-        pNestedArray = await this.readNestedArrayJsonContinue<int>().toList();
-        break;
+        pNestedArray = await this.readNestedArrayJsonContinue<List<int>, int>().toList();
+      case "text":
+        text = await this.readPropertyJsonContinue<String?>();
     }
   }
 }
@@ -73,13 +68,13 @@ await mc.loadJson(streamIterator);
 
 ## For arrays that are represented as objects
 ```dart
-class MyArrayClass with JsonArrayTraverser<MyClass> {
-  @override
-  FutureOr<MyClass> Function()? creator = MyClass.new; // or in constructor
+import "package:collection/collection.dart";
 
-  MyArrayClass() : super([]) {
-    // creator = MyClass.new;
-  }
+class MyArrayClass extends DelegatingList<MyClass> with JsonArrayTraverser<MyClass> {
+  @override
+  FutureOr<MyClass> Function()? get creator => MyClass.new;
+
+  MyArrayClass() : super([]);
 }
 ```
 

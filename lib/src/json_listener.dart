@@ -7,12 +7,6 @@ part of "json_event_decoder.dart";
 class _JsonListener {
   _JsonListener();
 
-  /// Stack used to handle nested containers.
-  ///
-  /// The current container is pushed on the stack when a new one is
-  /// started.
-  final List<Object?> stack = <Object?>[];
-
   /// The most recently read value. */
   Object? value;
 

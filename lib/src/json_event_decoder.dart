@@ -6,7 +6,7 @@ import "dart:typed_data";
 import "json_event.dart";
 
 part "chunked_json_parser.dart";
-part "json_listeneler.dart";
+part "json_listener.dart";
 part "json_string_decoder_sink.dart";
 part "json_string_parser.dart";
 part "number_buffer.dart";

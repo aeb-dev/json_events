@@ -1,3 +1,9 @@
+## 1.2.0
+
+- Fix errors in the examples in the README.
+- Provide better abstraction for mixin.
+- Fix filename typo.
+
 ## 1.1.0
 
 - Dart 3.0

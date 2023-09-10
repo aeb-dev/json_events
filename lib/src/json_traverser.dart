@@ -7,11 +7,7 @@ import "package:meta/meta.dart";
 import "../json_events.dart";
 
 /// A base mixin for json values
-mixin JsonTraverser {
-  /// The iterator to be used while parsing
-  @protected
-  late StreamIterator<JsonEvent> sij;
-
+abstract interface class JsonTraverser {
   /// Starts the loading of the json value to the correspoding
   /// json value from the iterator
   @internal

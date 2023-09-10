@@ -359,16 +359,18 @@ class TestPrimitiveArray extends DelegatingList<int>
 
 class TestObjectArray extends DelegatingList<TestObject>
     with JsonArrayTraverser<TestObject> {
-  TestObjectArray() : super(<TestObject>[]) {
-    creator = TestObject.new;
-  }
+  @override
+  FutureOr<TestObject> Function()? get creator => TestObject.new;
+
+  TestObjectArray() : super(<TestObject>[]);
 }
 
 class TestNestedObjectArray extends DelegatingList<List<TestObject>>
     with JsonNestedArrayTraverser<List<TestObject>, TestObject> {
-  TestNestedObjectArray() : super(<List<TestObject>>[]) {
-    creator = TestObject.new;
-  }
+  @override
+  FutureOr<TestObject> Function()? get creator => TestObject.new;
+
+  TestNestedObjectArray() : super(<List<TestObject>>[]);
 }
 
 class TestNestedPrimitiveArray extends DelegatingList<List<int>>

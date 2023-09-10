@@ -7,7 +7,7 @@ import "json_traverser.dart" as json_traverser;
 
 /// A mixin for reperesenting an object
 mixin JsonObjectTraverser implements json_traverser.JsonTraverser {
-  @override
+  /// The iterator to be used while parsing
   late final StreamIterator<JsonEvent> sij;
 
   @internal
