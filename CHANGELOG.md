@@ -1,3 +1,8 @@
+## 1.2.1
+
+- Fix errors in the examples in the README.
+- Fix operator precedence bug when compiled to web
+
 ## 1.2.0
 
 - Fix errors in the examples in the README.
