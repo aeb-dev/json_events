@@ -1030,6 +1030,10 @@ abstract class _ChunkedJsonParser<T> {
       }
     } else {
       int digitCount = 0;
+      // in dart code this is normally equal to 9223372036854775808
+      // because it is a vm patch
+      // we changed it here js value Number.MIN_SAFE_INTEGER to support web
+      const int min_int = -9007199254740991;
       do {
         if (digitCount >= 18) {
           // Check for overflow.
@@ -1038,8 +1042,7 @@ abstract class _ChunkedJsonParser<T> {
           if (sign < 0) {
             highDigit &= digit;
           }
-          // ignore: avoid_js_rounded_ints
-          if (digitCount == 19 || intValue - highDigit < -922337203685477580) {
+          if (digitCount == 19 || intValue - highDigit < min_int) {
             isDouble = true;
             // Big value that we know is not trusted to be exact later,
             // forcing reparsing using `double.parse`.
@@ -1133,7 +1136,7 @@ abstract class _ChunkedJsonParser<T> {
       intValue += expSign * exponent;
     }
     if (!isDouble) {
-      int bitFlag = -(sign + 1) >> 1; // 0 if sign == -1, -1 if sign == 1
+      int bitFlag = -((sign + 1) >> 1); // 0 if sign == -1, -1 if sign == 1
       // Negate if bitFlag is -1 by doing ~intValue + 1
       listener.handleNumber((intValue ^ bitFlag) - bitFlag);
       return position;
