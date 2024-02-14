@@ -2,6 +2,8 @@
   <a title="Pub" href="https://pub.dev/packages/json_events" ><img src="https://img.shields.io/pub/v/json_events.svg?style=popout" /></a>
 </p>
 
+⚠️ In order to support web, this library does not support very big numbers. Check dart's js compatibility regarding numbers
+
 # json_events
 A package for parsing large json files/objects. The package processes the json in a forward-only way and emits events based on the tokens it encounters.
 
@@ -11,11 +13,10 @@ From a `Stream`
 ```dart
 Stream<List<int>> s = ...;
 
-s.transform(const Utf8Decoder())
-  .transform(const JsonEventDecoder())
-  .flatten();
-
-await for (JsonEvent je in s) {
+await for (JsonEvent je in s
+    .transform(const Utf8Decoder())
+    .transform(const JsonEventDecoder())
+    .flatten()) {
   print("Event Type: ${je.type.name} Value: ${je.value}");
 }
 ```
@@ -24,10 +25,7 @@ From a `String`
 ```dart
 Stream<String> s = Stream.value(...);
 
-s.transform(const JsonEventDecoder())
-  .flatten();
-
-await for (JsonEvent je in s) {
+await for (JsonEvent je in s.transform(const JsonEventDecoder()).flatten()) {
   print("Event Type: ${je.type.name} Value: ${je.value}");
 }
 ```
