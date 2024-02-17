@@ -1136,9 +1136,10 @@ abstract class _ChunkedJsonParser<T> {
       intValue += expSign * exponent;
     }
     if (!isDouble) {
-      int bitFlag = -((sign + 1) >> 1); // 0 if sign == -1, -1 if sign == 1
-      // Negate if bitFlag is -1 by doing ~intValue + 1
-      listener.handleNumber((intValue ^ bitFlag) - bitFlag);
+      // toInt is needed on the next line because web
+      // converts 0 to 0.0 for some reason
+      // ignore: noop_primitive_operations
+      listener.handleNumber((intValue * -sign).toInt());
       return position;
     }
     // Double values at or above this value (2 ** 53) may have lost precision.
