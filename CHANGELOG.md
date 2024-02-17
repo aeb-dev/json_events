@@ -1,3 +1,7 @@
+## 1.2.2
+
+- Fix int parsing in web.
+
 ## 1.2.1
 
 - Fix errors in the examples in the README.
